@@ -77,7 +77,7 @@ The strongest signal appears at position `-1`, the final prompt token before gen
 Qwen3.5-4B stayed close to chance, while Qwen3-14B showed a clear rise near the end of the prompt.
 
 <p align="center">
-  <img src="outputs/analysis/cross-model/auc_by_prompt_position_m2_4b_vs_14b.png" alt="Position-local Top-k SVD leakage prediction for Qwen3.5-4B and Qwen3-14B" width="88%">
+  <img src="outputs/analysis/cross-model/auc_by_prompt_position_m1_m2_4b_vs_14b.png" alt="Position-local leakage prediction for Qwen3.5-4B and Qwen3-14B, shown for the secret-rank classifier M1 and the Top-k SVD classifier M2" width="88%">
 </p>
 
 The comparison suggests that the larger model may expose a more coherent internal signal. Because the models use different tokenizers and separately fitted lenses, we treat this as an observation rather than a pure model-size effect.
