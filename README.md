@@ -98,22 +98,20 @@ Across both policies, leakage fell from **48.9% to 1.1%**; under the strict poli
 <details>
 <summary><strong>Reproduce the analysis</strong></summary>
 
-The stored J-Lens readouts are tracked with Git LFS, so reproducing the classifier analysis does not require a GPU.
+The raw J-Lens readouts are **not** distributed with this repository. Each recorded run is several hundred megabytes (roughly 1.9 GB in total), which exceeds what Git LFS provides on a free account. Everything derived from them is included: the engineered feature tables, the fitted classifiers, the cross-validation metrics, and every figure shown above. The results can therefore be inspected and audited without a large download.
 
 ```bash
-git clone --recurse-submodules https://github.com/flyingpinguu/j-lens-capstone.git
-cd j-lens-capstone
-git lfs install
-git lfs pull
+git clone --recurse-submodules https://github.com/fhertlen/inside-the-llm-capstone.git
+cd inside-the-llm-capstone
 
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-
-python pipeline/qwen3_14b_analysis.py
 ```
 
-Generating new responses and readouts is the expensive stage and is best run on a CUDA GPU. Its configuration lives in [`pipeline/pipeline_main.py`](pipeline/pipeline_main.py).
+Stored results live in `outputs/pipeline/` (metrics, out-of-fold predictions, fitted models) and `outputs/analysis/` (figures and feature tables).
+
+Rebuilding the analysis from scratch requires regenerating the readouts first. That is the expensive stage and is best run on a CUDA GPU; its configuration lives in [`pipeline/pipeline_main.py`](pipeline/pipeline_main.py). Once a run has written its JSONL into `outputs/j-lens-run/`, [`pipeline/qwen3_14b_analysis.py`](pipeline/qwen3_14b_analysis.py) reproduces the headline analysis from it.
 
 </details>
 
@@ -129,8 +127,9 @@ pipeline/3_model_predictions/    M1–M4 classifiers and evaluation plots
 pipeline/pipeline_main.py        End-to-end configuration
 pipeline/qwen3_14b_analysis.py   Reproduce the headline analysis
 scripts/finetuning/              LoRA training and behavioral evaluation
-outputs/j-lens-run/              Recorded readouts via Git LFS
-outputs/analysis/                Result figures
+outputs/j-lens-run/              Target directory for regenerated readouts (not distributed)
+outputs/pipeline/                Metrics, out-of-fold predictions and fitted models
+outputs/analysis/                Result figures and feature tables
 demo/                            Exploratory leak-radar interface
 ```
 

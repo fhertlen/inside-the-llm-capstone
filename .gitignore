@@ -22,6 +22,12 @@ outputs/**/tokenizer_config.json
 outputs/**/optimizer_state.pt
 outputs/**/checkpoint-epoch-*/
 
+# Raw J-Lens readout runs (hundreds of MB each) and LoRA adapter weights are not
+# distributed with this repository; regenerate them with pipeline stage 1 and
+# scripts/finetuning/ respectively.
+outputs/j-lens-run/*.jsonl
+outputs/**/adapter_model.safetensors
+
 # Local files inside the upstream checkout are managed by its own Git repository.
 external/anthropic/jacobian-lens/.DS_Store
 

@@ -372,17 +372,18 @@ the notebook and old output formats remain compatible inputs.
   `qwen36-27b` config. Don't write code that silently
   assumes a local GPU is available — check/handle the CPU-only case
   explicitly or flag it.
-- This repo uses Git LFS for `outputs/**/adapter_model.safetensors` and
-  `outputs/j-lens-run/*.jsonl` (see `.gitattributes`). `git pull` /
-  `git reset --hard` can hang well past 2 minutes on the LFS smudge step
-  when a run adds/changes a large tracked output (seen with the ~1GB
-  `qwen35-4b-full-corpus-user-response-positions-top10-relabeled.jsonl`) — the
-  ordinary git-level update (files, ref, index) actually finishes quickly,
-  it's fetching the real LFS blob content that's slow. If a pull seems
-  stuck, `GIT_LFS_SKIP_SMUDGE=1 git pull` (or `reset --hard`) finishes the
-  git-level state fast, leaving LFS files as pointer stubs; follow with
-  `git lfs pull` to fetch the real content, which is fine to run in the
-  background/with a long timeout.
+- This repo no longer uses Git LFS. The raw readout runs
+  (`outputs/j-lens-run/*.jsonl`, ~1.9 GB) and the LoRA weights
+  (`outputs/**/adapter_model.safetensors`) were purged from the entire
+  history when this standalone repository was split off, because they
+  exceeded the free-tier LFS quota; both patterns are now in `.gitignore`.
+  Everything derived from them is still tracked: `outputs/pipeline/`
+  (metrics, out-of-fold predictions, fitted models) and `outputs/analysis/`
+  (figures, feature tables). Scripts that read a file under
+  `outputs/j-lens-run/` — notably `pipeline/qwen3_14b_analysis.py` — need a
+  regenerated run from pipeline stage 1 before they will execute. Do not
+  re-add large binaries; if a run output must be shared, attach it to a
+  GitHub Release instead of committing it.
 
 ## Deliverable order (graceful degradation — each stage independently
 presentable)
